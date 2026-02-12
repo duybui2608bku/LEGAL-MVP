@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Facebook, Linkedin, Scale } from "lucide-react";
+import { Facebook, Linkedin, Menu, Scale } from "lucide-react";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -29,12 +29,31 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <Link
-          href="/contact"
-          className="inline-flex items-center justify-center rounded-md bg-[#0B1F33] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#102b46]"
-        >
-          Free Evaluation
-        </Link>
+        <div className="flex items-center gap-2">
+          <details className="relative lg:hidden">
+            <summary className="list-none rounded-md border border-slate-300 bg-white p-2 text-slate-700 transition-colors hover:bg-slate-100">
+              <span className="sr-only">Open menu</span>
+              <Menu className="h-5 w-5" aria-hidden="true" />
+            </summary>
+            <nav className="absolute right-0 top-12 z-50 w-52 rounded-lg border border-slate-200 bg-white p-2 shadow-lg">
+              {navLinks.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="block rounded-md px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 hover:text-[#0B1F33]"
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </details>
+          <Link
+            href="/contact"
+            className="inline-flex items-center justify-center rounded-md bg-[#0B1F33] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#102b46]"
+          >
+            Free Evaluation
+          </Link>
+        </div>
       </div>
     </header>
   );
