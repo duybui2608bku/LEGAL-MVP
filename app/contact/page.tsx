@@ -19,7 +19,7 @@ export default function ContactPage() {
             <h1 className="mt-2 text-4xl font-bold text-[#0B1F33]">Request your free case evaluation</h1>
           </div>
           <Image
-            src="/images/contact-office.svg"
+            src="/images/contact-office.jpg"
             alt="Law office contact illustration"
             width={1200}
             height={760}

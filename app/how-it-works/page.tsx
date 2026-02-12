@@ -43,7 +43,7 @@ export default function HowItWorksPage() {
             <h1 className="mt-2 text-4xl font-bold text-[#0B1F33]">A clear legal process from start to finish</h1>
           </div>
           <Image
-            src="/images/process-steps.svg"
+            src="/images/process-steps.jpg"
             alt="Disability legal process timeline graphic"
             width={1200}
             height={760}

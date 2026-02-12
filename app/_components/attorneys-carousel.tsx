@@ -9,19 +9,19 @@ const attorneys = [
     name: "Rachel Morgan, Esq.",
     role: "Founding Disability Attorney",
     detail: "25+ years representing SSDI and SSI claimants in complex cases.",
-    image: "/images/attorney-rachel.svg",
+    image: "/images/attorney-rachel.jpg",
   },
   {
     name: "Daniel Carter, Esq.",
     role: "Appeals & Hearings Attorney",
     detail: "Focused on denied claims, hearings, and federal-level documentation.",
-    image: "/images/attorney-daniel.svg",
+    image: "/images/attorney-daniel.jpg",
   },
   {
     name: "Elena Brooks",
     role: "Senior Case Specialist",
     detail: "Coordinates medical records, filings, deadlines, and client updates.",
-    image: "/images/attorney-elena.svg",
+    image: "/images/attorney-elena.jpg",
   },
 ];
 

@@ -41,7 +41,7 @@ export default function ServicesPage() {
             <h1 className="mt-2 text-4xl font-bold text-[#0B1F33]">Disability law services built for real outcomes</h1>
           </div>
           <Image
-            src="/images/services-grid.svg"
+            src="/images/services-grid.jpg"
             alt="Legal services categories visual"
             width={1200}
             height={760}
@@ -82,7 +82,7 @@ export default function ServicesPage() {
       <section className="border-t border-slate-200 bg-slate-50">
         <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:px-8">
           <Image
-            src="/images/process-steps.svg"
+            src="/images/process-steps.jpg"
             alt="Case strategy and legal workflow visual"
             width={1200}
             height={760}

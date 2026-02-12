@@ -41,7 +41,7 @@ export default function AboutPage() {
             </p>
           </div>
           <Image
-            src="/images/team-photo.svg"
+            src="/images/team-photo.jpg"
             alt="Legal disability team illustration"
             width={1200}
             height={760}
@@ -107,7 +107,7 @@ export default function AboutPage() {
       <section className="border-t border-slate-200 bg-white">
         <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:px-8">
           <Image
-            src="/images/legal-hero.svg"
+            src="/images/legal-hero.jpg"
             alt="Law office professionalism visual"
             width={1200}
             height={800}

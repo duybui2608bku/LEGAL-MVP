@@ -39,7 +39,7 @@ export default function ResultsPage() {
             <h1 className="mt-2 text-4xl font-bold text-[#0B1F33]">Real success stories and case outcomes</h1>
           </div>
           <Image
-            src="/images/results-graph.svg"
+            src="/images/results-graph.jpg"
             alt="Case outcomes and growth chart illustration"
             width={1200}
             height={760}

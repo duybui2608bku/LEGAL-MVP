@@ -77,7 +77,7 @@ export default function Home() {
 
           <div className="overflow-hidden rounded-xl border border-white/20 bg-white/95 shadow-xl">
             <Image
-              src="/images/legal-hero.svg"
+              src="/images/legal-hero.jpg"
               alt="Legal disability services visual"
               width={1200}
               height={800}
@@ -236,7 +236,7 @@ export default function Home() {
             </div>
           </div>
           <Image
-            src="/images/services-grid.svg"
+            src="/images/services-grid.jpg"
             alt="Disability legal services overview graphic"
             width={1200}
             height={760}
