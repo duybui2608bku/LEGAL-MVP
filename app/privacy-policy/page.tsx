@@ -1,7 +1,11 @@
 import { Lock } from "lucide-react";
 import { SiteShell } from "../_components/site-chrome";
+import { getDynamicContent } from "@/lib/supabase/content";
 
-export default function PrivacyPolicyPage() {
+export default async function PrivacyPolicyPage() {
+  const content = await getDynamicContent('privacy-policy');
+  const body = content?.content?.body || "We protect personal information submitted through our contact forms...";
+
   return (
     <SiteShell>
       <section className="mx-auto w-full max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
@@ -12,12 +16,10 @@ export default function PrivacyPolicyPage() {
           <Lock className="h-7 w-7 text-[#C9A24D]" aria-hidden="true" />
           Privacy Policy
         </h1>
-        <p className="mt-6 text-sm leading-7 text-slate-600">
-          We protect personal information submitted through our contact forms and
-          communication channels. Information is used only for case evaluation,
-          legal communication, and service coordination in accordance with
-          applicable privacy standards.
-        </p>
+        <div
+          className="mt-6 text-sm leading-7 text-slate-600"
+          dangerouslySetInnerHTML={{ __html: body }}
+        />
       </section>
     </SiteShell>
   );

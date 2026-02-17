@@ -1,25 +1,42 @@
 import Image from "next/image";
 import { Building2, FileText, Linkedin, MapPin, Phone } from "lucide-react";
 import { SiteShell } from "../_components/site-chrome";
+import { getDynamicContent } from "@/lib/supabase/content";
 
-const offices = [
-  "123 Main Street, Suite 400, New York, NY",
-  "980 Market Avenue, Floor 8, Chicago, IL",
-];
+export default async function ContactPage() {
+  const content = await getDynamicContent('contact');
 
-export default function ContactPage() {
+  const heroBadge = content?.hero?.badge || "Contact";
+  const heroTitle = content?.hero?.title || "Request your free case evaluation";
+  const heroImage = content?.hero?.image || "/images/contact-office.jpg";
+
+  const infoDesc = content?.info?.description || "Share your case details and our team will follow up...";
+  const infoPhone = content?.info?.phone || "(800) 555-0199";
+  const infoEmail = content?.info?.email || "support@disabilitylawgroup.com";
+
+  const offices = content?.offices?.list || [
+    "123 Main Street, Suite 400, New York, NY",
+    "980 Market Avenue, Floor 8, Chicago, IL",
+  ];
+
+  const flowSteps = content?.flow?.steps || [
+    { step: "Step 1", detail: "We review your submission and available records." },
+    { step: "Step 2", detail: "A legal specialist contacts you for next details." },
+    { step: "Step 3", detail: "We outline a clear strategy and timeline." },
+  ];
+
   return (
     <SiteShell>
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:px-8">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.1em] text-[#C9A24D]">
-              Contact
+              {heroBadge}
             </p>
-            <h1 className="mt-2 text-4xl font-bold text-[#0B1F33]">Request your free case evaluation</h1>
+            <h1 className="mt-2 text-4xl font-bold text-[#0B1F33]">{heroTitle}</h1>
           </div>
           <Image
-            src="/images/contact-office.jpg"
+            src={heroImage}
             alt="Law office contact illustration"
             width={1200}
             height={760}
@@ -31,17 +48,16 @@ export default function ContactPage() {
       <section className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:px-8">
         <div>
           <p className="max-w-md text-sm leading-7 text-slate-600">
-            Share your case details and our team will follow up with guidance on next
-            steps for SSDI / SSI legal support.
+            {infoDesc}
           </p>
           <div className="mt-6 space-y-3 text-sm text-slate-700">
             <p className="flex items-center gap-2">
               <Phone className="h-4 w-4 text-[#C9A24D]" aria-hidden="true" />
-              (800) 555-0199
+              {infoPhone}
             </p>
             <p className="flex items-center gap-2">
               <FileText className="h-4 w-4 text-[#C9A24D]" aria-hidden="true" />
-              support@disabilitylawgroup.com
+              {infoEmail}
             </p>
           </div>
 
@@ -51,7 +67,7 @@ export default function ContactPage() {
               Office Locations
             </p>
             <ul className="mt-3 space-y-3">
-              {offices.map((office) => (
+              {offices.map((office: string) => (
                 <li key={office} className="flex items-start gap-2 text-sm text-slate-600">
                   <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#C9A24D]" aria-hidden="true" />
                   {office}
@@ -130,14 +146,10 @@ export default function ContactPage() {
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-[#0B1F33]">What Happens After You Submit</h2>
           <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {[
-              ["Step 1", "We review your submission and available records."],
-              ["Step 2", "A legal specialist contacts you for next details."],
-              ["Step 3", "We outline a clear strategy and timeline."],
-            ].map(([step, detail]) => (
-              <article key={step} className="rounded-xl border border-slate-200 bg-slate-50 p-5">
-                <h3 className="text-base font-semibold text-[#0B1F33]">{step}</h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600">{detail}</p>
+            {flowSteps.map((step: any) => (
+              <article key={step.step} className="rounded-xl border border-slate-200 bg-slate-50 p-5">
+                <h3 className="text-base font-semibold text-[#0B1F33]">{step.step}</h3>
+                <p className="mt-2 text-sm leading-6 text-slate-600">{step.detail}</p>
               </article>
             ))}
           </div>

@@ -1,7 +1,11 @@
 import { AlertTriangle } from "lucide-react";
 import { SiteShell } from "../_components/site-chrome";
+import { getDynamicContent } from "@/lib/supabase/content";
 
-export default function DisclaimerPage() {
+export default async function DisclaimerPage() {
+  const content = await getDynamicContent('disclaimer');
+  const body = content?.content?.body || "Case outcomes depend on individual facts, evidence, and agency decisions...";
+
   return (
     <SiteShell>
       <section className="mx-auto w-full max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
@@ -12,11 +16,10 @@ export default function DisclaimerPage() {
           <AlertTriangle className="h-7 w-7 text-[#C9A24D]" aria-hidden="true" />
           Disclaimer
         </h1>
-        <p className="mt-6 text-sm leading-7 text-slate-600">
-          Case outcomes depend on individual facts, evidence, and agency decisions.
-          No result is guaranteed. Website materials are general information and
-          should not be treated as individualized legal advice.
-        </p>
+        <div
+          className="mt-6 text-sm leading-7 text-slate-600"
+          dangerouslySetInnerHTML={{ __html: body }}
+        />
       </section>
     </SiteShell>
   );

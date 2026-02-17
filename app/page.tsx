@@ -9,16 +9,17 @@ import {
   Gavel,
   ShieldCheck,
   Star,
-  Trophy,
+  Trophy
 } from "lucide-react";
 import { AttorneysCarousel } from "./_components/attorneys-carousel";
 import { SiteShell } from "./_components/site-chrome";
+import { getDynamicContent } from "@/lib/supabase/content";
+import { getIcon } from "@/lib/icons";
 
-const highlights = [
+const defaultHighlights = [
   {
     title: "25+ years of legal experience",
-    description:
-      "Focused practice in disability law and Social Security benefits.",
+    description: "Focused practice in disability law and Social Security benefits.",
     icon: BriefcaseBusiness,
   },
   {
@@ -28,19 +29,55 @@ const highlights = [
   },
   {
     title: "Certified attorneys",
-    description:
-      "Credentialed legal professionals with deep hearing-level expertise.",
+    description: "Credentialed legal professionals with deep hearing-level expertise.",
     icon: Award,
   },
   {
     title: "Compassionate representation",
-    description:
-      "Clear communication and respectful support for clients and families.",
+    description: "Clear communication and respectful support for clients and families.",
     icon: ShieldCheck,
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  const content = await getDynamicContent('home');
+
+  // Hero section data
+  const heroTitle = content?.hero?.title || "Legal help for disability claims";
+  const heroBadge = content?.hero?.badge || "Professional Disability Law Firm";
+  const heroDesc = content?.hero?.description || "Professional representation for SSDI and SSI cases...";
+  const heroImage = content?.hero?.image || "/images/legal-hero.jpg";
+
+  // Dynamic highlights
+  const dynamicHighlights = content?.highlights?.items?.map((item: any) => ({
+    ...item,
+    icon: getIcon(item.icon)
+  })) || defaultHighlights;
+
+  // Stats
+  const stats = content?.stats?.items || [
+    ["3,200+", "Cases handled"],
+    ["89%", "Approval support rate"],
+    ["25+", "Years of service"],
+    ["4.9 / 5", "Client satisfaction"],
+  ].map(([value, label]) => ({ value, label }));
+
+  // Reviews
+  const reviews = content?.reviews?.items || [
+    {
+      name: "Michael R.",
+      quote: "Their team handled my appeal with precision and clear communication."
+    },
+    {
+      name: "Angela T.",
+      quote: "They explained each legal step in plain language."
+    },
+    {
+      name: "David L.",
+      quote: "Professional, responsive, and thorough."
+    }
+  ];
+
   return (
     <SiteShell>
       <section className="relative overflow-hidden border-b border-slate-200">
@@ -50,15 +87,15 @@ export default function Home() {
           <div className="space-y-6 text-white">
             <p className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.12em]">
               <Gavel className="h-4 w-4 text-[#C9A24D]" aria-hidden="true" />
-              Professional Disability Law Firm
+              {heroBadge}
             </p>
             <h1 className="max-w-xl text-4xl font-bold leading-tight sm:text-5xl">
-              Legal help for disability claims
+              {heroTitle}
             </h1>
-            <p className="max-w-xl text-base leading-7 text-slate-200">
-              Professional representation for SSDI and SSI cases with trusted
-              legal strategy, clear guidance, and client-focused support.
-            </p>
+            <div
+              className="max-w-xl text-base leading-7 text-slate-200"
+              dangerouslySetInnerHTML={{ __html: heroDesc }}
+            />
             <div className="flex flex-col gap-3 sm:flex-row">
               <Link
                 href="/contact"
@@ -77,7 +114,7 @@ export default function Home() {
 
           <div className="overflow-hidden rounded-xl border border-white/20 bg-white/95 shadow-xl">
             <Image
-              src="/images/legal-hero.jpg"
+              src={heroImage}
               alt="Legal disability services visual"
               width={1200}
               height={800}
@@ -88,7 +125,7 @@ export default function Home() {
                 Why choose our team
               </h2>
               <div className="mt-5 grid gap-4">
-                {highlights.map((item) => (
+                {dynamicHighlights.map((item: any) => (
                   <article
                     key={item.title}
                     className="rounded-lg border border-slate-200 bg-white p-4"
@@ -117,15 +154,10 @@ export default function Home() {
 
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto grid w-full max-w-6xl gap-5 px-4 py-10 sm:px-6 md:grid-cols-4 lg:px-8">
-          {[
-            ["3,200+", "Cases handled"],
-            ["89%", "Approval support rate"],
-            ["25+", "Years of service"],
-            ["4.9 / 5", "Client satisfaction"],
-          ].map(([value, label]) => (
-            <article key={label} className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-center">
-              <p className="text-3xl font-bold text-[#0B1F33]">{value}</p>
-              <p className="mt-1 text-sm text-slate-600">{label}</p>
+          {stats.map((stat: any) => (
+            <article key={stat.label} className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-center">
+              <p className="text-3xl font-bold text-[#0B1F33]">{stat.value}</p>
+              <p className="mt-1 text-sm text-slate-600">{stat.label}</p>
             </article>
           ))}
         </div>
@@ -184,26 +216,13 @@ export default function Home() {
             Trusted by clients through every stage
           </h2>
           <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {[
-              {
-                name: "Michael R.",
-                quote:
-                  "Their team handled my appeal with precision and clear communication. I felt supported throughout the process.",
-              },
-              {
-                name: "Angela T.",
-                quote:
-                  "They explained each legal step in plain language and helped my family stay organized and confident.",
-              },
-              {
-                name: "David L.",
-                quote:
-                  "Professional, responsive, and thorough. Their preparation made a major difference at hearing stage.",
-              },
-            ].map((item) => (
+            {reviews.map((item: any) => (
               <article key={item.name} className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
                 <MessageSquareQuote className="h-5 w-5 text-[#C9A24D]" aria-hidden="true" />
-                <p className="mt-3 text-sm leading-7 text-slate-700">&ldquo;{item.quote}&rdquo;</p>
+                <p
+                  className="mt-3 text-sm leading-7 text-slate-700"
+                  dangerouslySetInnerHTML={{ __html: item.quote }}
+                />
                 <p className="mt-4 text-sm font-semibold text-[#0B1F33]">{item.name}</p>
               </article>
             ))}
@@ -221,22 +240,29 @@ export default function Home() {
               Common questions about SSDI / SSI legal help
             </h2>
             <div className="mt-6 space-y-4">
-              {[
-                "When should I hire a disability attorney?",
-                "What happens if my initial claim is denied?",
-                "How long can the appeals process take?",
-              ].map((q) => (
-                <article key={q} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                  <p className="text-sm font-semibold text-[#0B1F33]">{q}</p>
-                  <p className="mt-1 text-sm text-slate-600">
-                    We provide clear guidance based on your case details and procedural stage.
-                  </p>
+              {(content?.faq?.items || []).map((faq: any) => (
+                <article key={faq.question} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                  <p className="text-sm font-semibold text-[#0B1F33]">{faq.question}</p>
+                  <p className="mt-1 text-sm text-slate-600">{faq.answer}</p>
                 </article>
-              ))}
+              )) || (
+                  [
+                    "When should I hire a disability attorney?",
+                    "What happens if my initial claim is denied?",
+                    "How long can the appeals process take?",
+                  ].map((q) => (
+                    <article key={q} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+                      <p className="text-sm font-semibold text-[#0B1F33]">{q}</p>
+                      <p className="mt-1 text-sm text-slate-600">
+                        We provide clear guidance based on your case details and procedural stage.
+                      </p>
+                    </article>
+                  ))
+                )}
             </div>
           </div>
           <Image
-            src="/images/services-grid.jpg"
+            src={content?.faq_image?.url || "/images/services-grid.jpg"}
             alt="Disability legal services overview graphic"
             width={1200}
             height={760}

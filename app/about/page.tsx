@@ -1,15 +1,10 @@
 import Image from "next/image";
 import { Award, BadgeCheck, HeartHandshake, Scale, ShieldCheck, Users } from "lucide-react";
 import { SiteShell } from "../_components/site-chrome";
+import { getDynamicContent } from "@/lib/supabase/content";
+import { getIcon } from "@/lib/icons";
 
-const values = [
-  { title: "Integrity", icon: ShieldCheck },
-  { title: "Compassion", icon: HeartHandshake },
-  { title: "Transparency", icon: BadgeCheck },
-  { title: "Excellence", icon: Award },
-];
-
-const team = [
+const defaultTeam = [
   {
     name: "Rachel Morgan, Esq.",
     role: "Founding Disability Attorney",
@@ -27,21 +22,53 @@ const team = [
   },
 ];
 
-export default function AboutPage() {
+const defaultValues = [
+  { title: "Integrity", icon: ShieldCheck },
+  { title: "Compassion", icon: HeartHandshake },
+  { title: "Transparency", icon: BadgeCheck },
+  { title: "Excellence", icon: Award },
+];
+
+export default async function AboutPage() {
+  const content = await getDynamicContent('about');
+
+  const heroBadge = content?.hero?.badge || "About Us";
+  const heroTitle = content?.hero?.title || "Our Mission & Vision";
+  const heroDesc = content?.hero?.description || "We help clients secure the disability benefits they deserve...";
+  const heroImage = content?.hero?.image || "/images/team-photo.jpg";
+
+  const missionTitle = content?.mission?.title || "Our Mission";
+  const missionDesc = content?.mission?.description || "Provide high-quality disability representation...";
+
+  const visionTitle = content?.vision?.title || "Our Vision";
+  const visionDesc = content?.vision?.description || "Be the most trusted disability law partner...";
+
+  const team = content?.team?.members || defaultTeam;
+  const values = content?.values?.items?.map((v: any) => ({
+    ...v,
+    icon: getIcon(v.icon)
+  })) || defaultValues;
+
+  const approachItems = content?.approach?.items || [
+    "Case-first strategy based on documentation quality.",
+    "Proactive communication with clients and families.",
+    "Hearing-ready preparation from the earliest stages.",
+  ];
+
   return (
     <SiteShell>
       <section className="border-b border-slate-200 bg-white">
         <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:px-8">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.1em] text-[#C9A24D]">About Us</p>
-            <h1 className="mt-2 text-4xl font-bold text-[#0B1F33]">Our Mission & Vision</h1>
-            <p className="mt-4 max-w-3xl text-sm leading-7 text-slate-600">
-              We help clients secure the disability benefits they deserve through ethical
-              advocacy, accurate legal guidance, and respectful communication.
-            </p>
+            <p className="text-sm font-semibold uppercase tracking-[0.1em] text-[#C9A24D]">{heroBadge}</p>
+            <h1 className="mt-2 text-4xl font-bold text-[#0B1F33]">{heroTitle}</h1>
+            <div
+              className="mt-4 max-w-3xl text-sm leading-7 text-slate-600"
+              dangerouslySetInnerHTML={{ __html: heroDesc }}
+            />
           </div>
           <Image
-            src="/images/team-photo.jpg"
+            src={heroImage}
             alt="Legal disability team illustration"
             width={1200}
             height={760}
@@ -54,19 +81,13 @@ export default function AboutPage() {
         <div className="grid gap-6 md:grid-cols-2">
           <article className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
             <Scale className="h-5 w-5 text-[#C9A24D]" aria-hidden="true" />
-            <h2 className="mt-3 text-xl font-semibold text-[#0B1F33]">Our Mission</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">
-              Provide high-quality disability representation and legal support for
-              applicants, families, and appeal cases.
-            </p>
+            <h2 className="mt-3 text-xl font-semibold text-[#0B1F33]">{missionTitle}</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">{missionDesc}</p>
           </article>
           <article className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
             <Users className="h-5 w-5 text-[#C9A24D]" aria-hidden="true" />
-            <h2 className="mt-3 text-xl font-semibold text-[#0B1F33]">Our Vision</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">
-              Be the most trusted disability law partner through consistent results
-              and client-first representation.
-            </p>
+            <h2 className="mt-3 text-xl font-semibold text-[#0B1F33]">{visionTitle}</h2>
+            <p className="mt-2 text-sm leading-6 text-slate-600">{visionDesc}</p>
           </article>
         </div>
       </section>
@@ -75,7 +96,7 @@ export default function AboutPage() {
         <div className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-[#0B1F33]">Our Team</h2>
           <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {team.map((member) => (
+            {team.map((member: any) => (
               <article key={member.name} className="rounded-xl border border-slate-200 bg-slate-50 p-5">
                 <h3 className="text-base font-semibold text-[#0B1F33]">{member.name}</h3>
                 <p className="mt-1 text-sm font-medium text-[#C9A24D]">{member.role}</p>
@@ -89,7 +110,7 @@ export default function AboutPage() {
       <section className="mx-auto w-full max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold text-[#0B1F33]">Our Values</h2>
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {values.map((value) => (
+          {values.map((value: any) => (
             <article key={value.title} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
               <value.icon className="h-5 w-5 text-[#C9A24D]" aria-hidden="true" />
               <h3 className="mt-3 text-base font-semibold text-[#0B1F33]">{value.title}</h3>
@@ -116,11 +137,7 @@ export default function AboutPage() {
           <div>
             <h2 className="text-3xl font-bold text-[#0B1F33]">Why Our Approach Works</h2>
             <div className="mt-6 space-y-4">
-              {[
-                "Case-first strategy based on documentation quality.",
-                "Proactive communication with clients and families.",
-                "Hearing-ready preparation from the earliest stages.",
-              ].map((item) => (
+              {approachItems.map((item: string) => (
                 <article key={item} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                   <p className="text-sm leading-6 text-slate-700">{item}</p>
                 </article>

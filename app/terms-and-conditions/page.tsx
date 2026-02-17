@@ -1,7 +1,11 @@
 import { FileCheck2 } from "lucide-react";
 import { SiteShell } from "../_components/site-chrome";
+import { getDynamicContent } from "@/lib/supabase/content";
 
-export default function TermsAndConditionsPage() {
+export default async function TermsAndConditionsPage() {
+  const content = await getDynamicContent('terms-and-conditions');
+  const body = content?.content?.body || "This website content is provided for informational purposes...";
+
   return (
     <SiteShell>
       <section className="mx-auto w-full max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
@@ -12,12 +16,10 @@ export default function TermsAndConditionsPage() {
           <FileCheck2 className="h-7 w-7 text-[#C9A24D]" aria-hidden="true" />
           Terms & Conditions
         </h1>
-        <p className="mt-6 text-sm leading-7 text-slate-600">
-          This website content is provided for informational purposes and does not
-          create an attorney-client relationship. Representation begins only after
-          a signed engagement agreement. Terms may be updated as required by law
-          and professional responsibility standards.
-        </p>
+        <div
+          className="mt-6 text-sm leading-7 text-slate-600"
+          dangerouslySetInnerHTML={{ __html: body }}
+        />
       </section>
     </SiteShell>
   );
