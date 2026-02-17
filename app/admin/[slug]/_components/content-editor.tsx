@@ -5,7 +5,10 @@ import { SiteContent, updateContent } from '@/lib/supabase/queries';
 import dynamic from 'next/dynamic';
 const TipTapEditor = dynamic(() => import('@/app/_components/admin-tiptap-editor'), { ssr: false });
 import JsonEditor from './json-editor';
+import ImageUpload from './image-upload';
+import IconPicker from './icon-picker';
 import { Save, Image as ImageIcon, FileText, List, Type, CheckCircle2, RotateCcw, Search, ChevronRight } from 'lucide-react';
+
 
 interface ContentEditorProps {
     initialContent: SiteContent[];
@@ -59,8 +62,8 @@ export default function ContentEditor({ initialContent }: ContentEditorProps) {
                             key={key}
                             onClick={() => setActiveSection(key)}
                             className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl text-sm font-bold transition-all ${activeSection === key
-                                    ? 'bg-slate-900 text-white shadow-xl shadow-slate-200'
-                                    : 'bg-white text-slate-500 hover:bg-slate-50 border border-slate-200'
+                                ? 'bg-slate-900 text-white shadow-xl shadow-slate-200'
+                                : 'bg-white text-slate-500 hover:bg-slate-50 border border-slate-200'
                                 }`}
                         >
                             <span className="capitalize">{key.replace(/[-_]/g, ' ')}</span>
@@ -89,9 +92,9 @@ export default function ContentEditor({ initialContent }: ContentEditorProps) {
                                     <div className="flex items-start justify-between mb-8">
                                         <div className="flex items-center gap-4">
                                             <div className={`w-12 h-12 flex items-center justify-center rounded-2xl shadow-sm ${item.content_type === 'image' ? 'bg-purple-100/50 text-purple-600' :
-                                                    item.content_type === 'rich-text' ? 'bg-blue-100/50 text-blue-600' :
-                                                        item.content_type === 'text' ? 'bg-emerald-100/50 text-emerald-600' :
-                                                            'bg-amber-100/50 text-amber-600'
+                                                item.content_type === 'rich-text' ? 'bg-blue-100/50 text-blue-600' :
+                                                    item.content_type === 'text' ? 'bg-emerald-100/50 text-emerald-600' :
+                                                        'bg-amber-100/50 text-amber-600'
                                                 }`}>
                                                 {item.content_type === 'image' && <ImageIcon className="w-6 h-6" />}
                                                 {item.content_type === 'rich-text' && <FileText className="w-6 h-6" />}
@@ -140,35 +143,28 @@ export default function ContentEditor({ initialContent }: ContentEditorProps) {
                                                 </button>
                                             </div>
                                         ) : item.content_type === 'image' ? (
-                                            <div className="flex flex-col md:flex-row gap-8">
-                                                <div className="flex-1 space-y-4">
-                                                    <div className="relative group/input">
-                                                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within/input:text-blue-500 transition-colors" />
-                                                        <input
-                                                            type="text"
-                                                            defaultValue={item.content_value || ''}
-                                                            className="w-full pl-12 pr-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-medium focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500 focus:bg-white outline-none transition-all shadow-sm"
-                                                            placeholder="Enter image URL or path..."
-                                                            onBlur={(e) => handleUpdate(item, e.target.value)}
-                                                        />
-                                                    </div>
-                                                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider px-1">Best results: 1200x800px or larger</p>
-                                                </div>
-                                                {item.content_value && (
-                                                    <div className="w-full md:w-56 h-36 rounded-3xl overflow-hidden border-4 border-slate-50 bg-slate-100 shadow-md group-hover:border-blue-50 transition-all">
-                                                        <img
-                                                            src={item.content_value}
-                                                            alt="Preview"
-                                                            className="w-full h-full object-cover"
-                                                        />
-                                                    </div>
-                                                )}
-                                            </div>
+                                            <ImageUpload
+                                                value={item.content_value || ''}
+                                                onChange={(url: string) => handleUpdate(item, url)}
+                                                suggestedSize={
+                                                    item.content_key.includes('hero') || item.section_key.includes('hero') ? '1920x1080px' :
+                                                        item.content_key.includes('logo') ? '512x512px' :
+                                                            item.content_key.includes('icon') ? '128x128px' :
+                                                                item.section_key.includes('feature') ? '800x600px' :
+                                                                    '1200x800px'
+                                                }
+                                            />
                                         ) : item.content_type === 'json' ? (
                                             <JsonEditor
                                                 value={item.json_value}
                                                 onChange={(newValue) => handleUpdate(item, null, newValue)}
                                             />
+                                        ) : item.content_key.toLowerCase().includes('icon') && item.content_type === 'text' ? (
+                                            <IconPicker
+                                                value={item.content_value || ''}
+                                                onChange={(newValue: string) => handleUpdate(item, newValue)}
+                                            />
+
                                         ) : (
                                             <textarea
                                                 rows={5}
@@ -178,6 +174,7 @@ export default function ContentEditor({ initialContent }: ContentEditorProps) {
                                                 onBlur={(e) => handleUpdate(item, e.target.value)}
                                             />
                                         )}
+
                                     </div>
                                 </div>
                             ))}
