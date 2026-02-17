@@ -6,10 +6,12 @@ import IconPicker from './icon-picker';
 
 interface JsonEditorProps {
     value: any;
+    contentKey?: string;
     onChange: (newValue: any) => void;
 }
 
-export default function JsonEditor({ value, onChange }: JsonEditorProps) {
+export default function JsonEditor({ value, contentKey, onChange }: JsonEditorProps) {
+
     const [items, setItems] = useState<any[]>([]);
     const [isObjectArray, setIsObjectArray] = useState(false);
     const [isStringArray, setIsStringArray] = useState(false);
@@ -94,7 +96,7 @@ export default function JsonEditor({ value, onChange }: JsonEditorProps) {
                                     {fields.map(field => (
                                         <div key={field} className="space-y-1">
                                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{field}</label>
-                                            {field === 'icon' ? (
+                                            {field.toLowerCase().includes('icon') ? (
                                                 <IconPicker
                                                     value={item[field] || ''}
                                                     onChange={(newValue) => handleUpdateItem(index, field, newValue)}
@@ -111,13 +113,21 @@ export default function JsonEditor({ value, onChange }: JsonEditorProps) {
                                     ))}
                                 </div>
                             ) : (
-                                <input
-                                    type="text"
-                                    value={item || ''}
-                                    onChange={(e) => handleUpdateItem(index, '', e.target.value)}
-                                    className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all"
-                                />
+                                contentKey?.toLowerCase().includes('icon') ? (
+                                    <IconPicker
+                                        value={item || ''}
+                                        onChange={(newValue) => handleUpdateItem(index, '', newValue)}
+                                    />
+                                ) : (
+                                    <input
+                                        type="text"
+                                        value={item || ''}
+                                        onChange={(e) => handleUpdateItem(index, '', e.target.value)}
+                                        className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all"
+                                    />
+                                )
                             )}
+
                         </div>
 
 

@@ -157,14 +157,14 @@ export default function ContentEditor({ initialContent }: ContentEditorProps) {
                                         ) : item.content_type === 'json' ? (
                                             <JsonEditor
                                                 value={item.json_value}
+                                                contentKey={item.content_key}
                                                 onChange={(newValue) => handleUpdate(item, null, newValue)}
                                             />
-                                        ) : item.content_key.toLowerCase().includes('icon') && item.content_type === 'text' ? (
+                                        ) : (item.content_key.toLowerCase().includes('icon') || item.section_key.toLowerCase().includes('icon')) && item.content_type === 'text' ? (
                                             <IconPicker
                                                 value={item.content_value || ''}
                                                 onChange={(newValue: string) => handleUpdate(item, newValue)}
                                             />
-
                                         ) : (
                                             <textarea
                                                 rows={5}
